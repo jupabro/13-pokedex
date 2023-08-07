@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, forkJoin } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
+import { Pokemon } from '../models/pokemon.model';
+import { PokemonApiResponse, PokemonResult, PokemonDescription, PokemonDescriptionApiResponse } from '../models/pokemonApiResponse.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,26 +14,26 @@ export class PokedexService {
 
   private url = 'https://pokeapi.co/api/v2';
 
-  getPokemons(limit: number): Observable<any[]> {
+  getPokemons(limit: number): Observable<Pokemon[]> {
     const url = `${this.url}/pokemon?limit=${limit}`;
 
-    return this.http.get<any>(url).pipe(
+    return this.http.get<PokemonApiResponse>(url).pipe(
 
-      map((response: any) => {
-        return response.results.map((pokemon: any) => {
+      map((response) => {
+        return response.results.map((pokemon: PokemonResult) => {
           const id = pokemon.url.split('/')[6];
           return {
             name: pokemon.name,
             image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`,
-            description: null // Update description in the following
+            description: "" // Update description in the following
           };
         });
       }),
-      mergeMap((pokemons: any[]) => {
+      mergeMap((pokemons: Pokemon[]) => {
         // mergeMap: transforms the array of pokemon objects into an array of observables that each fetch the description
-        const descriptionObservables = pokemons.map((pokemon: any) => {
+        const descriptionObservables = pokemons.map((pokemon: Pokemon) => {
           return this.getPokemonDescription(pokemon.name).pipe(
-            map((response: any) => {
+            map((response) => {
               return { ...pokemon, description: response.description };
             })
           );
@@ -42,12 +44,15 @@ export class PokedexService {
     );
   }
 
-  private getPokemonDescription(pokemonName: string): Observable<any> {
+  private getPokemonDescription(pokemonName: string): Observable<PokemonDescription> {
     const url = `${this.url}/pokemon-species/${pokemonName}/`;
-    return this.http.get<any>(url).pipe(
-      map((response: any) => {
+    return this.http.get<PokemonDescriptionApiResponse>(url).pipe(
+      map((response) => {
+
+        const englDescription = response.flavor_text_entries.find((entry) => entry.language.name === "en");
+
         return {
-          description: response.flavor_text_entries[0].flavor_text
+          description: englDescription ? englDescription.flavor_text : ""
         };
       })
     );
