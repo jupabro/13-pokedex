@@ -9,6 +9,7 @@ import { PokedexService } from 'src/app/shared/pokedex.service';
 export class PokedexPageComponent implements OnInit {
 
   pokemonList: any[] = []
+  test = ""
 
   constructor(private pokedexService: PokedexService) { }
 
