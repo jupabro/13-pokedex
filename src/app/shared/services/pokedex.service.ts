@@ -47,12 +47,19 @@ export class PokedexService {
   private getPokemonDescription(pokemonName: string): Observable<PokemonDescription> {
     const url = `${this.url}/pokemon-species/${pokemonName}/`;
     return this.http.get<PokemonDescriptionApiResponse>(url).pipe(
+
       map((response) => {
 
         const englDescription = response.flavor_text_entries.find((entry) => entry.language.name === "en");
 
+        if (englDescription) {
+          const formattedDescription = englDescription.flavor_text.replace(/[\n\f]/g, " ").trim();
+          return {
+            description: formattedDescription
+          };
+        }
         return {
-          description: englDescription ? englDescription.flavor_text : ""
+          description: ""
         };
       })
     );
