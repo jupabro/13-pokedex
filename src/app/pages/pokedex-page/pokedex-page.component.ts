@@ -30,7 +30,10 @@ export class PokedexPageComponent {
 
   close() {
     this.isClosed = true
-    console.log("closeclick", this.isClosed)
+  }
+
+  open() {
+    this.isClosed = false
   }
 
 }

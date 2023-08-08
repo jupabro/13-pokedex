@@ -1,10 +1,20 @@
 <div class="container">
     <div [ngClass]="isClosed? 'list-container-full-width' : 'list-container-compressed'">
         <app-pokemon-list [pokemons]="pokemons" (pokemonClicked)="onPokemonClicked($event)"></app-pokemon-list>
-        <button (click)="loadMore()">Load More</button>
+        <button class="expand-button" (click)="loadMore()">Load More</button>
     </div>
     <div *ngIf="!isClosed" class="detail-container">
-        <button class="close-button" (click)="close()">x</button>
         <app-pokemon-detail [pokemon]="pokemonDetail"></app-pokemon-detail>
     </div>
 </div>
+
+<button *ngIf="!isClosed" class="close-button" (click)="close()">
+    <span class="material-icons">
+        keyboard_double_arrow_right
+    </span>
+</button>
+<button *ngIf="isClosed && pokemonDetail" class="open-button" (click)="open()">
+    <span class="material-icons">
+        keyboard_double_arrow_left
+    </span>
+</button>
