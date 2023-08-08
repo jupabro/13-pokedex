@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PokedexService } from 'src/app/shared/services/pokedex.service';
 import { Pokemon } from 'src/app/shared/models/pokemon.model';
 
@@ -7,20 +7,23 @@ import { Pokemon } from 'src/app/shared/models/pokemon.model';
   templateUrl: './pokedex-page.component.html',
   styleUrls: ['./pokedex-page.component.scss']
 })
-export class PokedexPageComponent {
+export class PokedexPageComponent implements OnInit {
 
   pokemons: any[] = []
   pokemonDetail: Pokemon | null = null
   isClosed = true
 
-  constructor(private pokedexService: PokedexService) {
-    this.loadMore();
+  constructor(private pokedexService: PokedexService) { }
+
+  ngOnInit() {
+    this.pokedexService.pokemons$.subscribe((pokemons) => {
+      this.pokemons = pokemons;
+    })
+    this.pokedexService.loadPokemons()
   }
 
   loadMore() {
-    this.pokedexService.getPokemons().subscribe((pokemons) => {
-      this.pokemons = [...this.pokemons, ...pokemons];
-    });
+    this.pokedexService.loadPokemons()
   }
 
   onPokemonClicked(pokemon: Pokemon) {

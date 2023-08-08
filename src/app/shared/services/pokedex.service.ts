@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, forkJoin } from 'rxjs';
-import { map, mergeMap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, forkJoin } from 'rxjs';
+import { map, mergeMap, tap } from 'rxjs/operators';
 import { Pokemon } from '../models/pokemon.model';
 import { PokemonApiResponse, PokemonResult, PokemonDescription, PokemonDescriptionApiResponse } from '../models/pokemonApiResponse.model';
 
@@ -16,7 +16,18 @@ export class PokedexService {
   private currentOffset = 0;
   private limit = 20;
 
-  getPokemons(): Observable<Pokemon[]> {
+  private pokemonsSubject = new BehaviorSubject<Pokemon[]>([]);
+
+  public pokemons$ = this.pokemonsSubject.asObservable();
+
+  loadPokemons() {
+    this.fetchPokemons().subscribe((pokemons) => {
+      const currentPokemons = this.pokemonsSubject.value
+      this.pokemonsSubject.next([...currentPokemons, ...pokemons])
+    })
+  }
+
+  private fetchPokemons(): Observable<Pokemon[]> {
 
     const url = `${this.url}/pokemon?offset=${this.currentOffset}&limit=${this.limit}`;
 
@@ -24,6 +35,7 @@ export class PokedexService {
 
       map((response) => {
         return response.results.map((pokemon: PokemonResult) => {
+          console.log("fetching")
           const id = pokemon.url.split('/')[6];
           return {
             name: pokemon.name,
@@ -44,7 +56,7 @@ export class PokedexService {
         // ForkJoin: waits for the descriptionObservables to complete and emits final array 
         return forkJoin(descriptionObservables);
       })
-    );
+    )
   }
 
   private getPokemonDescription(pokemonName: string): Observable<PokemonDescription> {
