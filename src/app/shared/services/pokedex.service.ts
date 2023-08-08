@@ -13,9 +13,12 @@ export class PokedexService {
   constructor(private http: HttpClient) { }
 
   private url = 'https://pokeapi.co/api/v2';
+  private currentOffset = 0;
+  private limit = 20;
 
-  getPokemons(limit: number): Observable<Pokemon[]> {
-    const url = `${this.url}/pokemon?limit=${limit}`;
+  getPokemons(): Observable<Pokemon[]> {
+
+    const url = `${this.url}/pokemon?offset=${this.currentOffset}&limit=${this.limit}`;
 
     return this.http.get<PokemonApiResponse>(url).pipe(
 

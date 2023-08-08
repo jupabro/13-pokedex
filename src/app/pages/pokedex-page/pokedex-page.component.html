@@ -1,1 +1,10 @@
-<p>pokedex-page works!</p>
+<div class="container">
+    <div [ngClass]="isClosed? 'list-container-full-width' : 'list-container-compressed'">
+        <app-pokemon-list [pokemons]="pokemons" (pokemonClicked)="onPokemonClicked($event)"></app-pokemon-list>
+        <button (click)="loadMore()">Load More</button>
+    </div>
+    <div *ngIf="!isClosed" class="detail-container">
+        <button class="close-button" (click)="close()">x</button>
+        <app-pokemon-detail [pokemon]="pokemonDetail"></app-pokemon-detail>
+    </div>
+</div>
