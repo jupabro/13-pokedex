@@ -5,7 +5,7 @@
         <div class="form-group">
             <label for="name">Name</label>
             <input type="text" id="name" formControlName="name">
-            <div *ngIf="nameControl?.errors && myForm.submitted" class="error-message">
+            <div *ngIf="nameControl?.errors && myForm.submitted && myForm.touched" class="error-message">
                 <div *ngIf="nameControl?.hasError('required')">Name is required.</div>
                 <div *ngIf="nameControl?.hasError('minlength')">Name must be at least 3 characters long.</div>
                 <div *ngIf="nameControl?.hasError('maxlength')">Name can't be longer than 15 characters.</div>
@@ -15,7 +15,7 @@
         <div class="form-group">
             <label for="image">Image URL</label>
             <input type="url" id="image" formControlName="image">
-            <div *ngIf="imageControl?.errors && myForm.submitted" class="error-message">
+            <div *ngIf="imageControl?.errors && myForm.submitted && myForm.touched" class="error-message">
                 <div *ngIf="imageControl?.hasError('required')">Image URL is required.</div>
             </div>
         </div>
@@ -23,7 +23,7 @@
         <div class="form-group">
             <label for="description">Description</label>
             <textarea id="description" formControlName="description"></textarea>
-            <div *ngIf="descriptionControl?.errors && myForm.submitted" class="error-message">
+            <div *ngIf="descriptionControl?.errors && myForm.submitted && myForm.touched" class="error-message">
                 <div *ngIf="descriptionControl?.hasError('required')">Description is required.</div>
                 <div *ngIf="descriptionControl?.hasError('minlength')">Description must be at least 30 characters long.
                 </div>
@@ -35,4 +35,5 @@
         <button type="submit">Add</button>
 
     </form>
+    <div class="success-message" *ngIf="successfulCreation">Pokemon successfully created!</div>
 </div>

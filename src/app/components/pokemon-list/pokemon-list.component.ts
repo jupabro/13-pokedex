@@ -11,7 +11,13 @@ export class PokemonListComponent {
 
   @Output() pokemonClicked: EventEmitter<Pokemon> = new EventEmitter<Pokemon>();
 
+  fallbackImageUrl = '../../../assets/pokemon-1888657_640.png';
+
   onClick(pokemon: Pokemon): void {
     this.pokemonClicked.emit(pokemon);
+  }
+
+  onImageError(pokemon: Pokemon) {
+    pokemon.image = this.fallbackImageUrl;
   }
 }

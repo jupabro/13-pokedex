@@ -1,6 +1,6 @@
 <div class="container">
     <div *ngIf="pokemon" class="pokemon">
-        <img [src]="pokemon.image">
+        <img [src]="pokemon.image" (error)="onImageError()">
         <div class="name"> {{pokemon.name}}</div>
         <div class="description"> {{pokemon.description}}</div>
     </div>

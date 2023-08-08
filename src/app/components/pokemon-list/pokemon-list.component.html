@@ -1,6 +1,6 @@
 <div class="container">
     <div class="pokemon" *ngFor="let pokemon of pokemons" (click)="onClick(pokemon)">
-        <img [src]="pokemon.image">
+        <img [src]="pokemon.image" (error)="onImageError(pokemon)">
         <div class="name"> {{pokemon.name}}</div>
     </div>
 </div>

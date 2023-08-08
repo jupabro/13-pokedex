@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Pokemon } from 'src/app/shared/models/pokemon.model';
+import { PokedexService } from 'src/app/shared/services/pokedex.service';
 
 @Component({
   selector: 'app-create-pokemon-page',
@@ -8,8 +10,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class CreatePokemonPageComponent implements OnInit {
   pokemonForm!: FormGroup;
+  successfulCreation = false;
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private formBuilder: FormBuilder, private pokedexservice: PokedexService) { }
 
   ngOnInit() {
     this.pokemonForm = this.formBuilder.group({
@@ -31,11 +34,11 @@ export class CreatePokemonPageComponent implements OnInit {
     return this.pokemonForm.get('description');
   }
 
-
   onSubmit() {
-
-    console.log(this.pokemonForm.value);
-
+    const newPokemon: Pokemon = this.pokemonForm.value
+    this.pokedexservice.addPokemon(newPokemon)
+    this.pokemonForm.reset();
+    this.successfulCreation = true;
   }
 
 }

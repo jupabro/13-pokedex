@@ -7,5 +7,13 @@ import { Pokemon } from 'src/app/shared/models/pokemon.model';
   styleUrls: ['./pokemon-detail.component.scss']
 })
 export class PokemonDetailComponent {
+
+  fallbackImageUrl = '../../../assets/pokemon-1888657_640.png';
   @Input() pokemon: Pokemon | null = null
+
+  onImageError() {
+    if (this.pokemon) {
+      this.pokemon.image = this.fallbackImageUrl;
+    }
+  }
 }

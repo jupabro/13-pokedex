@@ -27,6 +27,11 @@ export class PokedexService {
     })
   }
 
+  addPokemon(newPokemon: Pokemon) {
+    const currentPokemons = this.pokemonsSubject.value
+    this.pokemonsSubject.next([newPokemon, ...currentPokemons])
+  }
+
   private fetchPokemons(): Observable<Pokemon[]> {
 
     const url = `${this.url}/pokemon?offset=${this.currentOffset}&limit=${this.limit}`;
@@ -55,6 +60,10 @@ export class PokedexService {
         });
         // ForkJoin: waits for the descriptionObservables to complete and emits final array 
         return forkJoin(descriptionObservables);
+      }),
+      tap(() => {
+        // tab: side effects without affecting the emitted values
+        this.currentOffset += 20;
       })
     )
   }
